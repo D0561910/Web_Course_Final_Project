@@ -1,0 +1,4 @@
+node_module/
+sessions/
+serviceAccountKey.json
+.DS_Store

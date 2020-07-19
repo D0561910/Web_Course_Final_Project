@@ -1,0 +1,48 @@
+/* .input::-webkit-input-placeholder,
+body,
+button,
+input,
+select,
+textarea,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: MicrosoftYaHei, '宋體', Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
+} */
+
+.nav-item,
+input::-webkit-input-placeholder {
+  font-weight: bold;
+}
+
+.nav-item:hover {
+  border-radius: 8px;
+  background: gray;
+}
+
+#picture1 {
+  cursor: pointer;
+  /* background-image: url('../images/claninfo.jpg') */
+}
+
+#picture2 {
+  cursor: pointer;
+  background-image: url('../images/0019.jpg')
+}
+
+#picture3 {
+  cursor: pointer;
+  background-image: url('../images/0020.jpg')
+}
+
+.carousel-item {
+  height: 100vh;
+  background: no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}

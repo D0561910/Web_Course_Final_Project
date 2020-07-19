@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html class="loaded" lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>Chat</title>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC|Noto+Serif+TC|Roboto&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/switchery.min.css">
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/switch.min.css">
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/palette-switch.min.css">
+    <!-- END: Vendor CSS-->
+
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/bootstrap-extended.min.css">
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/colors.min.css">
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/components.min.css">
+    <!-- END: Theme CSS-->
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/vertical-menu.min.css">
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/theme-assets/fonts/feather/style.css" />
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/theme-assets/fonts/line-awesome/css/line-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/palette-gradient.min.css">
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/style.min.css">
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/chat-application.css">
+    <!-- END: Page CSS-->
+
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="./ChatStyle/style.css">
+    <!-- END: Custom CSS-->
+
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./stylesheets/home.css">
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+<% if(islogined){ %>
+
+<body class="vertical-layout vertical-menu content-left-sidebar chat-application fixed-navbar  menu-expanded pace-done"
+    data-open="click" data-menu="vertical-menu" data-color="bg-gradient-x-purple-blue" data-col="content-left-sidebar">
+    <div class="pace  pace-inactive">
+        <div class="pace-progress" data-progress-text="100%" data-progress="99"
+            style="transform: translate3d(100%, 0px, 0px);">
+            <div class="pace-progress-inner"></div>
+        </div>
+        <div class="pace-activity"></div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/" style="font-family: Arial, Helvetica, sans-serif;">
+                <img src="./images/websitelogo.png" width="30" height="30" class="d-inline-block align-top mr-2"
+                    alt="website_Logo">
+                <%=title%>
+            </a>
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon "></span>
+            </button>
+            <!--collapsibleNavbar-->
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item ml-xl-4 ml-lg-1">
+                        <a class="font-medium-5 nav-link ml-2 ml-lg-0" href="/"
+                        style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">首页</a>
+                    </li>
+                    <li class="nav-item mt-2 mt-lg-0 ml-xl-4 ml-lg-1">
+                        <a class="font-medium-5 nav-link ml-2 ml-lg-0" href="./clan"
+                            style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">族群介紹</a>
+                    </li>
+                    <li class="nav-item ml-xl-4 ml-lg-1">
+                        <a class="font-medium-5 nav-link ml-2 ml-lg-0" href="./timeline"
+                            style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">節慶時程</a>
+                    </li>
+                    <li class="nav-item ml-xl-4 ml-lg-1">
+                        <a class="font-medium-5 nav-link ml-2 ml-lg-0" href="./chat"
+                            style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">留言Q&A</a>
+                    </li>
+                    <a class="dropdown-item" style="display: none">
+                        <div class="badge text-wrap d-inline-block text-truncate font-weight-bolder text-lowercase"
+                            style="width: 10rem; color: #000">
+                            <span id="uid"><%= uid %></span>
+                        </div>
+                    </a>
+                    <!-- <li class="nav-item ml-xl-4 mr-xl-5 ml-lg-1 mr-lg-1">
+                        <a class="nav-link ml-2 ml-lg-0" href="./login">登入</a>
+                    </li>
+                    <li class="nav-item my-2 my-lg-0 ml-xl-5 ml-lg-1">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="快速搜尋">
+                            <div class="input-group-append">
+                                <button class="btn btn-dark" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- BEGIN: Content-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="sidebar-content card d-none d-lg-block">
+                    <div class="card-body">
+                        <span class="float-right font-large-1 cursor-pointer">
+                            <button type="button" class="btn" data-toggle="modal" data-target="#inlineForm">
+                                <i class="ft-edit font-large-1"></i>
+                            </button>
+                        </span>
+                    </div>
+                    <div id="users-list" class="list-group position-relative">
+                        <div class="users-list-padding media-list">
+                            <% data.forEach(function(res){ %>
+                            <a href="#" class="media border-bottom-blue-grey border-bottom-lighten-5" id="<%= res.id %>"
+                                onclick="return changeFreq(this)">
+                                <div class="media-body w-100">
+                                    <p class="list-group-item-heading font-medium-3"
+                                        style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+                                        标题： <%= res.title %></p>
+                                    <p class="font-small-2 text-muted text-bold-500"
+                                        style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+                                        创建时间： <%= res.createat %></p>
+                                    <p class="font-small-2 text-muted text-bold-500"
+                                        style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+                                        创建者： <%= res.createby %></p>
+                                    <p class="font-small-2 text-muted text-bold-500"
+                                        style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+                                        问题内容： <%= res.message %></p>
+                                </div>
+                            </a>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9 pb-4" style="height:100vh">
+                <div class="content-wrapper">
+                    <div class="content-wrapper-before"></div>
+                    <div class="content-header row">
+                    </div>
+                    <div class="content-body">
+                        <section class="chat-app-window">
+                            <div id="msg-area">
+                                <div class="font-large-1 mb-1 secondary text-bold-700"
+                                    style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">留言板</div>
+                                <div class="chats">
+                                    <div class="chats" id="chatsBoard">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="chat-app-form">
+                            <form class="chat-app-input d-flex">
+                                <fieldset class="col-10 m-0">
+                                    <div class="input-group position-relative has-icon-left"
+                                        style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+                                        <div class="form-control-position">
+                                            <span id="basic-addon3">
+                                                <i class="ft-type"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="输入信息" id="inputmsg"
+                                            aria-describedby="button-addon2"
+                                            style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form-group position-relative has-icon-left col-2 m-0">
+                                    <button type="button" class="btn btn-danger" id="btn-send">
+                                        <i class="la la-paper-plane-o d-xl-none"></i>
+                                        <span class="d-none d-lg-none d-xl-block"
+                                            style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">发送</span>
+                                    </button>
+                                </fieldset>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+    <div class="modal fade text-left" id="inlineForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33"
+        aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label class="modal-title text-text-bold-600" id="myModalLabel33">问题</label>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="#">
+                    <div class="modal-body">
+                        <label>标题：</label>
+                        <div class="form-group">
+                            <input id="msg-title" type="text" placeholder="输入标题" class="form-control">
+                        </div>
+
+                        <label>问题：</label>
+                        <div class="form-group">
+                            <textarea name="message" id="msg" cols="30" rows="5"
+                                style="width: 100%; resize: none;"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input id="btn-create" class="btn btn-primary " value="发布">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="./ChatStyle/vendors.min.js" type="text/javascript"></script>
+    <script src="./ChatStyle/switchery.min.js" type="text/javascript"></script>
+    <script src="./ChatStyle/switch.min.js" type="text/javascript"></script>
+    <script src="./ChatStyle/app-menu.min.js" type="text/javascript"></script>
+    <script src="./ChatStyle/app.min.js" type="text/javascript"></script>
+    <script src="./ChatStyle/customizer.min.js" type="text/javascript"></script>
+    <script src="./ChatStyle/jquery.sharrre.js" type="text/javascript"></script>
+    <script src="./ChatStyle/chat-application.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        $('.content-body').hide();
+        // $('.chat-app-form').hide();
+        function changeFreq(element) {
+            // console.log(element.id); // this is reference to the a tag you clicked on
+            // need to use ajax request with server-side get information set inside modal.
+
+            name = name.trim();
+            $.ajax({
+                url: '/get_msg_info',
+                type: 'POST',
+                data: {
+                    key: element.id
+                }, success: function (res) {
+                    var result = res.data
+                    html = "";
+                    html += "<a class=\"dropdown-item\" style=\"display: none\">";
+                    html += "<div class=\"badge text-wrap d-inline-block text-truncate font-weight-bolder text-lowercase\" style=\"width: 10rem; color: #000\">";
+                    html += "<span id=\"boardKeys\">";
+                    html += `${res.key}`;
+                    html += "</span>";
+                    html += "</div>";
+                    html += "</a>";
+                    for (let i in result) {
+                        html += "<div class=\"chat chat-left\">";
+                        html += "<div class=\"chat-avatar\">";
+                        html += "<a class=\"avatar\" data-toggle=\"tooltip\" href=\"#\" data-placement=\"right\" title=\"\" data-original-title=\"\">";
+                        html += "<img src=\"./ChatStyle/user.svg\" class=\"box-shadow-4\" alt=\"user-icon\" style=\"background-color: aliceblue;\">";
+                        html += "</a>";
+                        html += "</div>";
+                        html += "<div class=\"chat-body\">";
+                        html += "<div class=\"chat-content font-medium-5\" style=\"font-family: Arial, Helvetica, sans-serif; font-weight: bold;\">";
+                        html += `<p>${result[i].name}</p>`;
+                        html += `<p>${result[i].commitat}</p>`;
+                        html += `<p>${result[i].msg}</p>`;
+                        html += "</div>";
+                        html += "</div>";
+                        html += "</div>";
+                    }
+                    $("#chatsBoard").append(html);
+                    $('.content-body').show();
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            // $('#msg-list').click(function () {
+            //     $('.content-body').show();
+            // });
+
+            $("#btn-create").click(function () {
+                var msg = $("#msg").val();
+                var title = $("#msg-title").val();
+
+                $.ajax({
+                    url: '/createMsg',
+                    type: 'POST',
+                    data: {
+                        title: title,
+                        msg: msg,
+                        userid: document.getElementById("uid").textContent,
+                    },
+                    success: function (result) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        alert("Error: " + error)
+                    }
+                });
+
+            })
+
+            $('#btn-send').click(function () {
+                $.ajax({
+                    url: '/sendMsg',
+                    type: 'POST',
+                    data: {
+                        msg: $("#inputmsg").val(),
+                        key: document.getElementById("boardKeys").textContent,
+                    },
+                    success: function (result) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        alert("Error: " + error)
+                    }
+                })
+            })
+        })
+    </script>
+
+    <!-- END: Body-->
+</body>
+
+<% } else {%>
+
+<body class="vertical-layout vertical-menu 1-column blank-page blank-page pace-done" data-open="click"
+    data-menu="vertical-menu" data-color="bg-gradient-x-purple-blue" data-col="1-column">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="./images/websitelogo.png" width="30" height="30" class="d-inline-block align-top mr-2"
+                    alt="website_Logo">
+                <%=title%>
+            </a>
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon "></span>
+            </button>
+            <!--collapsibleNavbar-->
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item ml-xl-4 ml-lg-1">
+                        <a class="font-medium-5 nav-link ml-2 ml-lg-0" href="./"
+                            style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">首页</a>
+                    </li>
+                    <li class="nav-item mt-2 mt-lg-0 ml-xl-4 ml-lg-1">
+                        <a class="font-medium-5 nav-link ml-2 ml-lg-0" href="./clan"
+                            style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">族群介紹</a>
+                    </li>
+                    <li class="nav-item ml-xl-4 ml-lg-1">
+                        <a class="font-medium-5 nav-link ml-2 ml-lg-0" href="./timeline"
+                            style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">節慶時程</a>
+                    </li>
+                    <li class="nav-item ml-xl-4 ml-lg-1">
+                        <a class="font-medium-5 nav-link ml-2 ml-lg-0" href="./chat"
+                            style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">留言Q&A</a>
+                    </li>
+                    <!-- <li class="nav-item my-2 my-lg-0 ml-xl-5 ml-lg-1">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="快速搜尋">
+                            <div class="input-group-append">
+                                <button class="btn btn-dark" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="app-content content pt-5">
+        <div class="content-wrapper">
+            <div class="content-wrapper-before"></div>
+            <div class="content-header row">
+            </div>
+            <div class="container pt-5">
+                <div class="col-12 d-flex row align-items-center justify-content-center">
+                    <div class="col-lg-6 col-md-8 col-12">
+                        <img class="img-fluid" src="./images/login2.jpg" alt="">
+                    </div>
+                    <div class="col-lg-6 col-md-4 col-12 pt-2">
+                        <div class="card border-grey border-lighten-3 px-1 py-1 m-0">
+                            <div class="card-header border-0">
+                                <div class="font-large-1 text-center">
+                                    使用者登入/原住民登入
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="text-center">
+                                    <div id="customBtn" class="customGPlusSignIn mb-1 mr-1">
+                                        <a onclick={signInWithGoogle()}>
+                                            <span class="icon"></span>
+                                            <span class="buttonText"> Sign in with Google </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- <div class="text-center">
+                                    <div id="FBcustomBtn" class="btn-block customFBSignIn mb-1 mr-1">
+                                        <a onclick={signInWithFacebook()}>
+                                            <span class="FB-icon"></span>
+                                            <span class="fbbuttonText"> Sign in with Facebook </span>
+                                        </a>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BEGIN: Vendor JS-->
+    <script src="./theme-assets/vendors/js/vendors.min.js" type="text/javascript"></script>
+    <script src="./theme-assets/vendors/js/forms/toggle/switchery.min.js" type="text/javascript"></script>
+    <script src="./theme-assets/js/scripts/forms/switch.min.js" type="text/javascript"></script>
+    <!-- BEGIN Vendor JS-->
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="./theme-assets/vendors/js/forms/validation/jqBootstrapValidation.js" type="text/javascript"></script>
+    <!-- END: Page Vendor JS-->
+    <!-- BEGIN: Theme JS-->
+    <script src="./theme-assets/js/core/app-menu.min.js" type="text/javascript"></script>
+    <script src="./theme-assets/js/core/app.min.js" type="text/javascript"></script>
+    <!-- END: Theme JS-->
+    <!-- BEGIN: Page JS-->
+    <script src="./theme-assets/vendors/js/forms/validation/form-login-register.min.js" type="text/javascript"></script>
+    <!-- END: Page JS-->
+
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-analytics.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-firestore.js"></script>
+
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyB57bIaO2YjsN7JDeiybnSoOseqpNUTBNk",
+            authDomain: "webcoursedatabase.firebaseapp.com",
+            databaseURL: "https://webcoursedatabase.firebaseio.com",
+            projectId: "webcoursedatabase",
+            storageBucket: "webcoursedatabase.appspot.com",
+            messagingSenderId: "469722590244",
+            appId: "1:469722590244:web:d032a8d28d69ffef9ebcb1",
+            measurementId: "G-QRE4FDXZ4W"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        function signInWithGoogle() {
+            // Using a popup.
+            var provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
+            firebase.auth().signInWithPopup(provider).then(function (result) {
+                // This gives you a Google Access Token.
+                var token = result.credential.accessToken;
+                // The signed-in user info.
+                var user = result.user;
+                firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
+                    // Send token to your backend via HTTPS
+                    $.ajax({
+                        url: '/logins',
+                        type: 'POST',
+                        data: {
+                            ids: idToken
+                        },
+                        success: function (data) {
+                            console.log({ data });
+                            location.replace("/chats");
+                        }
+                    });
+                }).catch(function (error) {
+                    // Handle error
+                    console.log(error);
+                });
+            });
+        }
+        function signInWithFacebook() {
+            // Sign in using a popup.
+            var provider = new firebase.auth.FacebookAuthProvider();
+            provider.addScope('email');
+            provider.addScope('user_birthday');
+            firebase.auth().signInWithPopup(provider).then(function (result) {
+                // console.log(result); //This is Object
+                // This gives you a Facebook Access Token.
+                var token = result.credential.accessToken;
+                // The signed-in user info.
+                var user = result.user;
+                firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
+                    // Send token to your backend via HTTPS
+                    $.ajax({
+                        url: '/logins',
+                        type: 'POST',
+                        data: {
+                            ids: idToken
+                        },
+                        success: function (data) {
+                            location.reload();
+                        }
+                    });
+                    console.log("idtoken: ", idToken);
+                }).catch(function (error) {
+                    // Handle error
+                    console.log(error);
+                });
+            });
+        }
+
+    </script>
+
+</body>
+<%} %>
+
+</html>
