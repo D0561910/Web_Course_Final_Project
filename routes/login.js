@@ -1,9 +1,11 @@
-var express = require('express');
+var express = require("express");
+const isAuthenticated = require("../utils/isAuthenticated");
+
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('signin', { title: '原住民資訊' });
+/* logins route. */
+router.post("/logins", isAuthenticated, function (req, res, next) {
+  res.json({ ret_code: 0, ret_msg: "登入成功" });
 });
 
 module.exports = router;

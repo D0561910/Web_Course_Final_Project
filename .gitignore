@@ -1,6 +1,7 @@
 node_modules/
 sessions/
-serviceAccountKey.json
+config/serviceAccountKey.json
+config/firebase.config.js
 .DS_Store
 .gitignore
 package-lock.json

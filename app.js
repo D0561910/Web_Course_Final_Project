@@ -3,43 +3,20 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const admin = require("firebase-admin");
 const multer = require("multer");
-const moment = require("moment");
 
 // import session module
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
 
+// import Route
 const chatRouter = require("./routes/chat");
 const clanRouter = require("./routes/claninfo");
 const indexRouter = require("./routes/index");
 const loginRouter = require("./routes/login");
 const timelineRouter = require("./routes/timeline");
 
-// import Classes
-const ancestry = require("./utils/Classes/ancestry");
-const calenderStyle = require("./utils/Classes/calenderStyle");
-const claninfo = require("./utils/Classes/claninfo");
-const customs = require("./utils/Classes/customs");
-const eventinfos = require("./utils/Classes/eventinfos");
-const events = require("./utils/Classes/events");
-const livelihood = require("./utils/Classes/livelihood");
-const msgBoard = require("./utils/Classes/msgBoard");
-const msgList = require("./utils/Classes/msgList");
-
-// load serviceAccountkey.json
-const serviceAccount = require("./serviceAccountKey.json");
-
 const app = express();
-
-// firebase init
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://webcoursedatabase.firebaseio.com",
-});
-
-const firebase = admin.database();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -50,8 +27,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
-app.use("/", indexRouter);
 
 // set up session
 const identityKey = "skey";
@@ -71,246 +46,11 @@ app.use(
   })
 );
 
-//timeline
-app.get("/timeline", function (req, res, next) {
-  var calend = firebase.ref("/calender");
-  const promiseEventList = new Promise((resolve, reject) => {
-    calend.on("value", function (snapshot) {
-      var data = snapshot.val();
-      var calenderArray = [];
-      for (let i in data) {
-        var item = new calenderStyle();
-        item.index = `${i}/01/2020`;
-        item.clan = data[i].clan;
-        item.info = data[i].info;
-        item.month = data[i].month;
-        item.name = data[i].name;
-        item.warning = data[i].warning;
-        calenderArray.push(item);
-      }
-      resolve(calenderArray);
-    });
-  });
-
-  promiseEventList.then((response) => {
-    res.render("timeline", { title: "原住民資訊", data: response });
-  });
-});
-
-app.get("/clan", function (req, res, next) {
-  var eventDetails = firebase.ref("/ed");
-  const promiseDetails = new Promise((resolve, reject) => {
-    eventDetails.on("value", function (snapshot) {
-      var data = snapshot.val();
-      var clanArray = [];
-      for (let i in data) {
-        var clanclass = new claninfo();
-        clanclass.about = data[i].about;
-        clanclass.clan = data[i].clan;
-        clanclass.village = data[i].village;
-
-        // Process AncestryObject;
-        var ancestryObj = data[i].ancestry;
-        for (let j in ancestryObj) {
-          var ancestryClass = new ancestry();
-          ancestryClass.data = ancestryObj[j].data;
-          ancestryClass.key = ancestryObj[j].key;
-          clanclass.ancestry.push(ancestryClass);
-        }
-
-        // Process livelihoodObject
-        var livelihoodObj = data[i].livelihood;
-        for (let k in livelihoodObj) {
-          var livelihoodClass = new livelihood();
-          livelihoodClass.data = livelihoodObj[k].data;
-          livelihoodClass.key = livelihoodObj[k].key;
-          clanclass.livelihood.push(livelihoodClass);
-        }
-
-        // Process livelihoodObject
-        var customsObj = data[i].customs;
-        for (let l in customsObj) {
-          var customsClass = new customs();
-          var customsEventData = customsObj[l].event;
-          customsClass.data = customsObj[l].data;
-          for (let m in customsEventData) {
-            var eve = new events();
-            var eveinfo = customsEventData[m].event_info;
-            eve.title = customsEventData[m].title;
-            for (let n in eveinfo) {
-              var evedata = new eventinfos();
-              evedata.datas = eveinfo[n].data;
-              eve.eventInfos.push(evedata);
-            }
-            customsClass.event.push(eve);
-          }
-          clanclass.customs.push(customsClass);
-        }
-        clanArray.push(clanclass);
-      }
-      resolve(clanArray);
-    });
-  });
-
-  promiseDetails.then((response) => {
-    res.render("claninfo", { title: "原住民資訊", data: response });
-  });
-});
-
-app.get("/chat", function (req, res, next) {
-  res.render("chatapps", {
-    title: "原住民資訊",
-    islogined: false,
-  });
-});
-
-app.get("/chats", function (req, res, next) {
-  var sess = req.session;
-  var loginUser = sess.loginUser;
-  var userEmail = sess.userEmail;
-  var isLogined = !!loginUser;
-  req.session.prjId = " ";
-  req.session.prj = " ";
-
-  var usertokenID = sess.tokenID;
-  var uid = sess.uid;
-
-  var msgRef = firebase.ref("/messageboard");
-  const msgArray = new Promise((resolve, reject) => {
-    msgRef.on("value", function (snapshot) {
-      var data = snapshot.val();
-      var msgArray = [];
-      for (let i in data) {
-        var boardList = new msgList();
-        boardList.id = i;
-        boardList.title = data[i].title;
-        boardList.message = data[i].message;
-        boardList.createby = data[i].createby;
-        boardList.createat = moment(data[i].createat).format(
-          "MMMM Do YYYY, h:mm:ss a"
-        );
-        msgArray.push(boardList);
-      }
-      resolve(msgArray);
-    });
-  });
-
-  msgArray.then((response) => {
-    res.render("chatapps", {
-      title: "原住民資訊",
-      islogined: isLogined,
-      email: userEmail || "",
-      name: loginUser || "",
-      uid: uid || "",
-      token: usertokenID,
-      data: response,
-    });
-  });
-});
-
-// Create authentication middleware
-function isAuthenticated(req, res, next) {
-  // check is user logged in
-  // if they are, attach them to the request object and call next
-  // if they are not, send them to the login pages
-  // with a message saying : 'login!'
-
-  var idToken = req.body.ids;
-  // idToken comes from the client app
-  admin
-    .auth()
-    .verifyIdToken(idToken)
-    .then(function (decodedToken) {
-      let uid = decodedToken.uid;
-      // console.log({ decodedToken });
-      if (uid) {
-        req.session.regenerate(function (err) {
-          if (err) {
-            return res.json({ ret_code: 2, ret_msg: "登入失敗" });
-          }
-          //here for user id.
-          req.session.tokenID = idToken;
-          req.session.loginUser = decodedToken.name;
-          req.session.userEmail = decodedToken.email;
-          req.session.uid = uid;
-          next();
-        });
-      } else {
-        // res.json({ ret_code: 1, ret_msg: '賬號或密碼錯誤' });
-        res.redirect("/");
-      }
-    })
-    .catch(function (error) {
-      // Handle error
-      res.redirect("/");
-    });
-}
-
-app.post("/logins", isAuthenticated, function (req, res, next) {
-  res.json({ ret_code: 0, ret_msg: "登入成功" });
-});
-
-app.post("/createMsg", function (req, res, next) {
-  var sess = req.session;
-  var uid = sess.uid;
-  var loginUser = sess.loginUser;
-  var title = req.body.title;
-  var message = req.body.msg;
-  var msgRef = firebase.ref("/messageboard");
-  //   console.log(m);
-  // console.log(moment(m).format('MMMM Do YYYY, h:mm:ss a'));
-
-  msgRef.push({
-    title: title,
-    message: message,
-    createby: loginUser,
-    userid: uid,
-    createat: moment.now(),
-  });
-
-  res.send("Done");
-});
-
-app.post("/get_msg_info", function (req, res, next) {
-  var msgRef = firebase.ref(`/messageboard/${req.body.key}`);
-
-  const promiseGetMsgInfo = new Promise((resolve, reject) => {
-    msgRef.on("value", function (snapshot) {
-      var data = snapshot.val();
-      var main = new msgBoard();
-      var boardArray = [];
-      main.name = data.createby;
-      main.msg = `问题： ${data.message}`;
-      main.commitat = moment(data.createat).format("MMMM Do YYYY, h:mm:ss a");
-      boardArray.push(main);
-      var msgArray = data.messages;
-      for (let i in msgArray) {
-        var second = new msgBoard();
-        second.name = msgArray[i].commitby;
-        second.msg = msgArray[i].message;
-        second.commitat = moment(msgArray[i].commitat).format(
-          "MMMM Do YYYY, h:mm:ss a"
-        );
-        boardArray.push(second);
-      }
-      resolve(boardArray);
-    });
-  });
-  promiseGetMsgInfo.then((response) => {
-    res.json({ data: response, key: req.body.key });
-  });
-});
-
-app.post("/sendMsg", function (req, res, next) {
-  var sess = req.session;
-  var msgRef = firebase.ref(`/messageboard/${req.body.key}/messages`);
-  msgRef.push({
-    commitat: moment.now(),
-    commitby: sess.loginUser,
-    message: req.body.msg,
-  });
-  res.send("Done");
-});
+app.use("/", indexRouter);
+app.use("/", timelineRouter);
+app.use("/", clanRouter);
+app.use("/", chatRouter);
+app.use("/", loginRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
