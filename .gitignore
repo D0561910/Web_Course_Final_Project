@@ -3,3 +3,4 @@ sessions/
 serviceAccountKey.json
 .DS_Store
 .gitignore
+package-lock.json
