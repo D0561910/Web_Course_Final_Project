@@ -1,47 +1,60 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var admin = require('firebase-admin');
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const admin = require("firebase-admin");
 const multer = require("multer");
 const moment = require("moment");
 
-var chatRouter = require('./routes/chat');
-var clanRouter = require('./routes/claninfo');
-var indexRouter = require('./routes/index');
-var loginRouter = require('./routes/login');
-var timelineRouter = require('./routes/timeline');
+// import session module
+const session = require("express-session");
+const FileStore = require("session-file-store")(session);
+
+const chatRouter = require("./routes/chat");
+const clanRouter = require("./routes/claninfo");
+const indexRouter = require("./routes/index");
+const loginRouter = require("./routes/login");
+const timelineRouter = require("./routes/timeline");
+
+// import Classes
+const ancestry = require("./utils/Classes/ancestry");
+const calenderStyle = require("./utils/Classes/calenderStyle");
+const claninfo = require("./utils/Classes/claninfo");
+const customs = require("./utils/Classes/customs");
+const eventinfos = require("./utils/Classes/eventinfos");
+const events = require("./utils/Classes/events");
+const livelihood = require("./utils/Classes/livelihood");
+const msgBoard = require("./utils/Classes/msgBoard");
+const msgList = require("./utils/Classes/msgList");
 
 // load serviceAccountkey.json
-var serviceAccount = require("./serviceAccountKey.json");
+const serviceAccount = require("./serviceAccountKey.json");
 
-var app = express();
+const app = express();
 
 // firebase init
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://webcoursedatabase.firebaseio.com"
+  databaseURL: "https://webcoursedatabase.firebaseio.com",
 });
 
-var firebase = admin.database();
+const firebase = admin.database();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use('/', indexRouter);
+app.use("/", indexRouter);
 
 // set up session
-const session = require("express-session");
-const FileStore = require("session-file-store")(session);
-var identityKey = "skey";
+const identityKey = "skey";
 app.set("trust proxy", 1); // trust first proxy
 
 app.use(
@@ -52,86 +65,11 @@ app.use(
     saveUninitialized: false, // 是否自動儲存未初始化的會話，建議false
     resave: false, // 是否每次都重新儲存會話，建議false
     cookie: {
-      maxAge: 3600 * 1000 // 有效期，單位是毫秒 1hour
+      maxAge: 3600 * 1000, // 有效期，單位是毫秒 1hour
       // expires: expiryDate
-    }
+    },
   })
 );
-
-// Create Classes
-class calenderStyle {
-  constructor() {
-    this.index = "";
-    this.clan = "";
-    this.info = "";
-    this.month = "";
-    this.name = "";
-    this.warning = "";
-  }
-}
-
-class claninfo {
-  constructor() {
-    this.about = "";
-    this.ancestry = [];
-    this.clan = "";
-    this.customs = [];
-    this.livelihood = [];
-    this.village = "";
-  }
-}
-
-class ancestry {
-  constructor() {
-    this.data = "";
-    this.key = "";
-  }
-}
-
-class customs {
-  constructor() {
-    this.data = "";
-    this.event = [];
-  }
-}
-
-class events {
-  constructor() {
-    this.title = "";
-    this.eventInfos = [];
-  }
-}
-
-class eventinfos {
-  constructor() {
-    this.datas = "";
-  }
-}
-
-class livelihood {
-  constructor() {
-    this.data = "";
-    this.keys = "";
-  }
-}
-
-class msgList {
-  constructor() {
-    this.id = "";
-    this.title = "";
-    this.message = "";
-    this.createby = "";
-    this.createat = "";
-  }
-}
-
-class msgBoard {
-  constructor() {
-    this.name = "";
-    this.msg = "";
-    this.commitat = "";
-  }
-}
 
 //timeline
 app.get("/timeline", function (req, res, next) {
@@ -154,8 +92,8 @@ app.get("/timeline", function (req, res, next) {
     });
   });
 
-  promiseEventList.then(response => {
-    res.render('timeline', { title: '原住民資訊', data: response });
+  promiseEventList.then((response) => {
+    res.render("timeline", { title: "原住民資訊", data: response });
   });
 });
 
@@ -204,7 +142,7 @@ app.get("/clan", function (req, res, next) {
               evedata.datas = eveinfo[n].data;
               eve.eventInfos.push(evedata);
             }
-            customsClass.event.push(eve)
+            customsClass.event.push(eve);
           }
           clanclass.customs.push(customsClass);
         }
@@ -214,14 +152,14 @@ app.get("/clan", function (req, res, next) {
     });
   });
 
-  promiseDetails.then(response => {
-    res.render('claninfo', { title: '原住民資訊', data: response });
+  promiseDetails.then((response) => {
+    res.render("claninfo", { title: "原住民資訊", data: response });
   });
 });
 
 app.get("/chat", function (req, res, next) {
   res.render("chatapps", {
-    title: '原住民資訊',
+    title: "原住民資訊",
     islogined: false,
   });
 });
@@ -248,22 +186,24 @@ app.get("/chats", function (req, res, next) {
         boardList.title = data[i].title;
         boardList.message = data[i].message;
         boardList.createby = data[i].createby;
-        boardList.createat = moment(data[i].createat).format('MMMM Do YYYY, h:mm:ss a');
+        boardList.createat = moment(data[i].createat).format(
+          "MMMM Do YYYY, h:mm:ss a"
+        );
         msgArray.push(boardList);
       }
       resolve(msgArray);
     });
   });
 
-  msgArray.then(response => {
+  msgArray.then((response) => {
     res.render("chatapps", {
-      title: '原住民資訊',
+      title: "原住民資訊",
       islogined: isLogined,
       email: userEmail || "",
       name: loginUser || "",
       uid: uid || "",
       token: usertokenID,
-      data: response
+      data: response,
     });
   });
 });
@@ -286,7 +226,6 @@ function isAuthenticated(req, res, next) {
       if (uid) {
         req.session.regenerate(function (err) {
           if (err) {
-
             return res.json({ ret_code: 2, ret_msg: "登入失敗" });
           }
           //here for user id.
@@ -326,8 +265,8 @@ app.post("/createMsg", function (req, res, next) {
     message: message,
     createby: loginUser,
     userid: uid,
-    createat: moment.now()
-  })
+    createat: moment.now(),
+  });
 
   res.send("Done");
 });
@@ -342,33 +281,33 @@ app.post("/get_msg_info", function (req, res, next) {
       var boardArray = [];
       main.name = data.createby;
       main.msg = `问题： ${data.message}`;
-      main.commitat = moment(data.createat).format('MMMM Do YYYY, h:mm:ss a');
+      main.commitat = moment(data.createat).format("MMMM Do YYYY, h:mm:ss a");
       boardArray.push(main);
       var msgArray = data.messages;
       for (let i in msgArray) {
         var second = new msgBoard();
         second.name = msgArray[i].commitby;
         second.msg = msgArray[i].message;
-        second.commitat = moment(msgArray[i].commitat).format('MMMM Do YYYY, h:mm:ss a');
+        second.commitat = moment(msgArray[i].commitat).format(
+          "MMMM Do YYYY, h:mm:ss a"
+        );
         boardArray.push(second);
       }
       resolve(boardArray);
     });
   });
-  promiseGetMsgInfo.then(response => {
+  promiseGetMsgInfo.then((response) => {
     res.json({ data: response, key: req.body.key });
   });
-
-
 });
 
-app.post('/sendMsg', function (req, res, next) {
+app.post("/sendMsg", function (req, res, next) {
   var sess = req.session;
   var msgRef = firebase.ref(`/messageboard/${req.body.key}/messages`);
   msgRef.push({
     commitat: moment.now(),
     commitby: sess.loginUser,
-    message: req.body.msg
+    message: req.body.msg,
   });
   res.send("Done");
 });
@@ -382,11 +321,11 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render("error");
 });
 
 module.exports = app;
