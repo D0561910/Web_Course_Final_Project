@@ -5,3 +5,4 @@ config/firebase.config.js
 .DS_Store
 .gitignore
 package-lock.json
+db.config.js

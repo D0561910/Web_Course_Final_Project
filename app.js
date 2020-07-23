@@ -52,6 +52,34 @@ app.use("/", clanRouter);
 app.use("/", chatRouter);
 app.use("/", loginRouter);
 
+var mysql = require("mysql");
+
+var connection = mysql.createConnection({
+  host: "127.0.0.1",
+  user: "root",
+  password: "123456",
+  port: "3306",
+  database: "database_development",
+});
+
+connection.connect();
+
+var sql = "SELECT * FROM Users";
+
+connection.query(sql, function (err, result) {
+  if (err) {
+    console.log("[SELECT ERROR] - ", err.message);
+    return;
+  }
+
+  // console.log(result);
+  for(let i in result){
+    console.log(`${i} + ${result[i]}`)
+  }
+});
+
+connection.end();
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
