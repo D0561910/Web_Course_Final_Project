@@ -1,6 +1,8 @@
 var express = require("express");
+
 // import firebase function
 const firebase = require("../config/firebase.config");
+
 // import Classes
 const claninfo = require("../utils/Classes/claninfo");
 const ancestry = require("../utils/Classes/ancestry");
