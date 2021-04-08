@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="./favicon.png">
+
     <title>族群介紹</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -126,11 +128,13 @@
                     <ul class=" nav-tabs--vertical nav" role="navigation">
 
                         <% data.forEach(function(res){ %>
-                        <li class="nav-item">
-                            <a href="#<%= res.clan %>" class="nav-link" data-toggle="tab" role="tab"
-                                aria-controls="lorem"><%= res.clan%></a>
-                        </li>
-                        <% }) %>
+                            <li class="nav-item">
+                                <a href="#<%= res.clan %>" class="nav-link" data-toggle="tab" role="tab"
+                                    aria-controls="lorem">
+                                    <%= res.clan%>
+                                </a>
+                            </li>
+                            <% }) %>
                     </ul>
                 </div>
             </div>
@@ -140,55 +144,73 @@
                     <div class="tab-content ">
 
                         <% data.forEach(function(res){ %>
-                        <div class="tab-pane fade" id="<%= res.clan %>" role="tabpanel">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <p> <b>關於部落</b> </p>
-                                    <p><%= res.about %></p>
-                                </div>
-                                <div class="col-md-12">
-                                    <hr style="margin:5px 0;" />
-                                    <dl class="row">
-                                        <dt class="col-sm-2">家園資訊 :</dt>
-                                        <dd class="col-sm-10">
-                                            <p><%= res.village %></p>
-                                        </dd>
+                            <div class="tab-pane fade" id="<%= res.clan %>" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p> <b>關於部落</b> </p>
+                                        <p>
+                                            <%= res.about %>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <hr style="margin:5px 0;" />
+                                        <dl class="row">
+                                            <dt class="col-sm-2">家園資訊 :</dt>
+                                            <dd class="col-sm-10">
+                                                <p>
+                                                    <%= res.village %>
+                                                </p>
+                                            </dd>
 
-                                        <dt class="col-sm-2">生活資訊 :</dt>
-                                        <dd class="col-sm-10">
-                                            <% res.livelihood.forEach(function(result){ %>
-                                            <p> <b><%= result.key %></b> </p>
-                                            <p><%= result.data %></p>
-                                            <% }) %>
-                                        </dd>
+                                            <dt class="col-sm-2">生活資訊 :</dt>
+                                            <dd class="col-sm-10">
+                                                <% res.livelihood.forEach(function(result){ %>
+                                                    <p> <b>
+                                                            <%= result.key %>
+                                                        </b> </p>
+                                                    <p>
+                                                        <%= result.data %>
+                                                    </p>
+                                                    <% }) %>
+                                            </dd>
 
-                                        <dt class="col-sm-2">祖先資訊 :</dt>
-                                        <dd class="col-sm-10">
-                                            <% res.ancestry.forEach(function(result){ %>
-                                            <p> <b><%= result.key %></b> </p>
-                                            <p><%= result.data %></p>
-                                            <% }) %>
-                                        </dd>
-                                        <dt class="col-sm-2">風俗民情 :</dt>
-                                        <dd class="col-sm-10">
-                                            <% res.customs.forEach(function(result){ %>
-                                            <p><%= result.data %></p>
-                                            <% result.event.forEach(function(datas){ %>
-                                            <p><b><%= datas.title %></b></p>
-                                            <% datas.eventInfos.forEach(function(datass){ %>
-                                            <p><%= datass.datas %></p>
-                                            <%}) %>
-                                            <% }) %>
-                                            <% }) %>
-                                            <p>
-                                                <small>78.023</small>
-                                            </p>
-                                        </dd>
-                                    </dl>
+                                            <dt class="col-sm-2">祖先資訊 :</dt>
+                                            <dd class="col-sm-10">
+                                                <% res.ancestry.forEach(function(result){ %>
+                                                    <p> <b>
+                                                            <%= result.key %>
+                                                        </b> </p>
+                                                    <p>
+                                                        <%= result.data %>
+                                                    </p>
+                                                    <% }) %>
+                                            </dd>
+                                            <dt class="col-sm-2">風俗民情 :</dt>
+                                            <dd class="col-sm-10">
+                                                <% res.customs.forEach(function(result){ %>
+                                                    <p>
+                                                        <%= result.data %>
+                                                    </p>
+                                                    <% result.event.forEach(function(datas){ %>
+                                                        <p><b>
+                                                                <%= datas.title %>
+                                                            </b></p>
+                                                        <% datas.eventInfos.forEach(function(datass){ %>
+                                                            <p>
+                                                                <%= datass.datas %>
+                                                            </p>
+                                                            <%}) %>
+                                                                <% }) %>
+                                                                    <% }) %>
+                                                                        <p>
+                                                                            <small>78.023</small>
+                                                                        </p>
+                                            </dd>
+                                        </dl>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <% }) %>
+                            <% }) %>
 
                     </div>
                 </div>
